@@ -1,0 +1,70 @@
+﻿<h3 style="text-align:center;background-color:darkcyan; color:black;border:2px solid">All Products</h3>
+@page "/AllProducts"
+
+@inject al_nabaa_store.BackEnd.InterFaces.IProducts _Products
+@inject NavigationManager _Nav
+
+<input type="text" class="form-control" @oninput="SearchInList"/>
+
+
+
+<table class="table table-striped">
+<thead>
+    <tr>
+        <th>Name</th>
+        <th>Company</th>
+        <th>Graphic Card</th>
+        <th>RAM</th>
+        <th>CPU</th>
+        <th>Hard</th>
+        <th>Hard Type</th>
+        <th>Price</th>
+        
+
+
+    </tr>
+
+</thead>
+@foreach (var item in ListOfSearchedProducts)
+{
+    <tr>
+        <td>@item.Name</td>
+        <td>@item.Company</td>
+        <td>@item.GraphicCard</td>
+        <td>@item.RAM</td>
+        <td>@item.Cpu</td>
+        <td>@item.Hard</td>
+        <td>@item.Type</td>
+        <td>@item.Price</td>
+        <td><button class="btn btn-primary"@onclick="(()=>EditPage(item.Id,item.Name))">Edit</button></td>
+
+
+    </tr>
+}
+</table>
+
+
+
+@code {
+    public List<al_nabaa_store.Models.ProductsModels> ListOFLapTops { get; set; } = new List<Models.ProductsModels>();
+    protected override async Task OnInitializedAsync()
+    {
+        ListOFLapTops = await _Products.GetAllProducts();
+        ListOfSearchedProducts = ListOFLapTops;
+
+    }
+
+    public List<al_nabaa_store.Models.ProductsModels> ListOfSearchedProducts { get; set; } = new List<Models.ProductsModels>();
+
+    private void SearchInList (ChangeEventArgs e)
+    {
+        var Name = e.Value.ToString();
+        ListOfSearchedProducts = ListOFLapTops.Where(a => a.Name.ToLower().Contains(Name.ToLower())).ToList();
+
+    }
+    private void EditPage(int Id,string name)
+    {
+        _Nav.NavigateTo($"EditProduct/{Id}/{name}");
+    }
+
+}

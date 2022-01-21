@@ -1,0 +1,89 @@
+﻿@page  "/AddProduct"
+
+
+@using al_nabaa_store.BackEnd.InterFaces
+@using al_nabaa_store.Models
+@inject IProducts _IProducts
+@inject IJSRuntime _JS
+
+<div class="container" style="background-color:lightgray;margin:10px;padding:10px;border:2px dashed">
+     <h3 style="text-align:center;background-color:orangered; color:darkblue;border:2px solid">Add New Product</h3>
+     <EditForm Model="Product" OnValidSubmit="SendProduct">
+        
+         <div class="form-row">
+             <div class="col">
+                 <input required type="text" class="form-control"@bind-value="Product.Name" placeholder="Product Name"/>
+
+             </div>
+             <div class="col">
+                  <input required type="text" class="form-control"@bind-value="Product.Company" placeholder="Company Name"/>
+
+             </div>
+
+
+         </div>
+         <div class="form-row">
+             <div class="col">
+                <input required type="text" class="form-control"@bind-value="Product.GraphicCard" placeholder="Graphic Card"/>
+
+             </div>
+             <div class="col">
+                 <input required type="text" class="form-control"@bind-value="Product.Cpu" placeholder="Cpu"/>
+
+             </div>
+
+
+         </div>
+          <div class="form-row">
+             <div class="col">
+                <input required type="text" class="form-control"@bind-value="Product.RAM" placeholder="RAM"/>
+
+             </div>
+             <div class="col">
+                 <input required type="text" class="form-control"@bind-value="Product.Hard" placeholder="Hard"/>
+
+             </div>
+
+
+         </div>
+         
+         <div class="form-row">
+             <div class="col">
+               <input required type="text" class="form-control"@bind-value="Product.Type" placeholder="Hard Type"/>
+
+             </div>
+             <div class="col">
+                 <input required type="number" class="form-control"@bind-value="Product.Price" placeholder="Price"/>
+
+             </div>
+
+
+         </div>
+      
+         
+         <br/>
+
+         <button class="btn btn-warning form-control">Add Product</button>
+
+
+
+
+     </EditForm>
+
+
+</div>
+
+
+
+@code {
+    public ProductsModels Product { get; set; } = new ProductsModels();
+
+
+    private async Task SendProduct()
+    {
+        var Result= await _IProducts.AddProducts(Product);
+        await _JS.InvokeVoidAsync("alert", Result);
+        Product = new ProductsModels();
+    }
+
+}

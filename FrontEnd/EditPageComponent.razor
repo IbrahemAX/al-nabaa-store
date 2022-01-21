@@ -1,0 +1,126 @@
+﻿@page "/EditProduct/{Id}/{Name}"
+@inject al_nabaa_store.BackEnd.InterFaces.IProducts _IProduct
+@inject IJSRuntime _Js
+@inject NavigationManager _nav
+<h3>The Product Id is :@Id</h3>
+<h3>The Product Name is :@Name</h3>
+
+
+
+
+<div class="container" style="background-color:lightgray;margin:10px;padding:10px;border:2px dashed">
+     <h3 style="text-align:center;background-color:orangered; color:darkblue;border:2px solid">Add New Product</h3>
+     <EditForm Model="Product" OnValidSubmit="EditProduct">
+        
+         <div class="form-row">
+             <div class="col">
+                 <input required type="text" class="form-control"@bind-value="Product.Name" placeholder="Product Name"/>
+
+             </div>
+             <div class="col">
+                  <input required type="text" class="form-control"@bind-value="Product.Company" placeholder="Company Name"/>
+
+             </div>
+
+
+         </div>
+         <div class="form-row">
+             <div class="col">
+                <input required type="text" class="form-control"@bind-value="Product.GraphicCard" placeholder="Graphic Card"/>
+
+             </div>
+             <div class="col">
+                 <input required type="text" class="form-control"@bind-value="Product.Cpu" placeholder="Cpu"/>
+
+             </div>
+
+
+         </div>
+          <div class="form-row">
+             <div class="col">
+                <input required type="text" class="form-control"@bind-value="Product.RAM" placeholder="RAM"/>
+
+             </div>
+             <div class="col">
+                 <input required type="text" class="form-control"@bind-value="Product.Hard" placeholder="Hard"/>
+
+             </div>
+
+
+         </div>
+         
+         <div class="form-row">
+             <div class="col">
+               <input required type="text" class="form-control"@bind-value="Product.Type" placeholder="Hard Type"/>
+
+             </div>
+             <div class="col">
+                 <input required type="number" class="form-control"@bind-value="Product.Price" placeholder="Price"/>
+
+             </div>
+
+
+         </div>
+      
+         
+         <br/>
+
+         <button class="btn btn-warning form-control">Edit Product</button>
+
+
+
+
+     </EditForm>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+@code {
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public string  Name  { get; set; }
+
+    public Models.ProductsModels Product { get; set; } = new Models.ProductsModels();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Product = await _IProduct.GetProductDetails(int.Parse(Id));
+    }
+
+    private async Task EditProduct()
+    {
+        var result = await _Js.InvokeAsync<bool>("confirm", "تمت اضافة المنتج بنجاح");
+        if (result == true)
+        {
+            var Message = await _IProduct.EditProduct(Product);
+            await _Js.InvokeVoidAsync("alert", Message);
+            _nav.NavigateTo("AllProducts");
+
+        }
+        else
+        {
+            return;
+        }
+
+    }
+
+
+
+
+
+
+}
